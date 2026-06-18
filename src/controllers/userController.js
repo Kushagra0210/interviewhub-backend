@@ -4,7 +4,18 @@ const getUsers = (req, res) => {
         users: ["Kushagra", "Aman"]
     });
 };
-
+const createUser = (req, res) => {
+    const { name, email } = req.body;
+    res.json({
+        success: true,
+        message: "user created successfully",
+        user: {
+            name,
+            email
+        }
+    });
+};
 module.exports = {
     getUsers,
+    createUser,
 };
