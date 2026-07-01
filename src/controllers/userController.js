@@ -5,7 +5,6 @@ const createUser = async (req, res) => {
     try {
         // Extract data from request body
         const { name, email } = req.body;
-
         // Create new user in MongoDB
         const user = await User.create({
             name,
@@ -49,6 +48,44 @@ const deleteUser = async (req, res) => {
         res.json({
             success: true,
             message: "User deleted",
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+// UPDATE USER CONTROLLER
+const updateUser = async (req, res) => {
+    try {
+        // Get ID from URL
+        const userId = req.params.id;
+        // Get updated data from request body
+        const { name, email } = req.body;
+        // Find user by ID and update
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                name,
+                email,
+            },
+            {
+                new: true,
+            }
+        );
+        // If user not found
+        if (!updatedUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        // Success response
+        res.status(200).json({
+            success: true,
+            message: "User updated successfully",
+            updatedUser,
         });
     } catch (error) {
         res.status(500).json({
