@@ -3,6 +3,8 @@ const express = require("express");
 // Create router
 const router = express.Router();
 // Import controllers
+// import middleware
+const protect = require("../middleware/authMiddleware");
 const {
     createUser,
     loginUser,
@@ -15,10 +17,10 @@ router.post("/", createUser);
 // create user login api
 router.post("/login", loginUser);
 // GET USERS API
-router.get("/", getUsers);
+router.get("/", protect, getUsers);
 // DELETE USER API
-router.delete("/:id", deleteUser);
+router.delete("/:id", protect, deleteUser);
 // UPDATE
-router.put("/:id", updateUser);
+router.put("/:id", protect, updateUser);
 // Export router
 module.exports = router;
