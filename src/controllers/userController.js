@@ -1,19 +1,76 @@
 // Import User model
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 // CREATE USER
 const createUser = async (req, res) => {
     try {
         // Extract data from request body
-        const { name, email } = req.body;
+        const { name, email, password } = req.body;
         // Create new user in MongoDB
+        // check existing user
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "user already exists"
+            });
+        }
+        // hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({
             name,
             email,
+            password: hashedPassword,
         });
         // Send success response
         res.status(201).json({
             success: true,
             user,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        // Check user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid credentials",
+            });
+        }
+        // Compare passwords
+        const isMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid credentials",
+            });
+        }
+        // Generate JWT token
+        const token = jwt.sign(
+            {
+                id: user._id,
+            },
+            "secretkey",
+            {
+                expiresIn: "7d",
+            }
+        );
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            token,
         });
     } catch (error) {
         res.status(500).json({
@@ -97,6 +154,7 @@ const updateUser = async (req, res) => {
 // Export controllers
 module.exports = {
     createUser,
+    loginUser,
     getUsers,
     deleteUser,
 };
