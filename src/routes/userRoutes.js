@@ -5,12 +5,15 @@ const router = express.Router();
 // Import controllers
 const {
     createUser,
+    loginUser,
     getUsers,
     deleteUser,
     updateUser,
 } = require("../controllers/userController");
 // CREATE USER API
 router.post("/", createUser);
+// create user login api
+router.post("/login", loginUser);
 // GET USERS API
 router.get("/", getUsers);
 // DELETE USER API
