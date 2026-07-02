@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
-const protect = async (req, res) => {
+//IMPORT USER MODEL
+const User = require("../models/User");
+//prptect middleware
+const protect = async (req, res, next) => {
     try {
         let token;
         //check if authorisation header exists
@@ -20,10 +23,16 @@ const protect = async (req, res) => {
             );
         }
         // verify token
-        const decoded = jwt.verify(token, "secretkey");
-        // save user data inside request 
-        req.user = decoded;
-        // move to nect middleware/controller
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // find user drom db
+        //User.findById(decoded.id) fetches REAL user from database.Now backend knows: name, email, createdAt, everything.
+
+        req.user = await user.findById(decoded.id)
+            //exclude password
+            //.select("-password") OST IMPORTANT SECURITY PRACTICE.Means:Do NOT return password Even hashed passwords should not be exposed
+
+            .select("-password");
+        // continue request
         next();
     }
     catch (error) {

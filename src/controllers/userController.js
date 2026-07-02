@@ -35,6 +35,7 @@ const createUser = async (req, res) => {
         });
     }
 };
+// login user
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -62,7 +63,7 @@ const loginUser = async (req, res) => {
             {
                 id: user._id,
             },
-            "secretkey",
+            "process.env.JWT_SECRET",
             {
                 expiresIn: "7d",
             }
@@ -74,6 +75,22 @@ const loginUser = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+// get logged in user 
+const getMyProfile = async (req, res) => {
+    try {
+        // req.user comes from middleware
+        req.status(201).json({
+            success: true,
+            user: req.user,
+        });
+    }
+    catch (error) {
+        req.status(500).json({
             success: false,
             message: error.message,
         });
@@ -155,6 +172,7 @@ const updateUser = async (req, res) => {
 module.exports = {
     createUser,
     loginUser,
+    getMyProfile,
     getUsers,
     deleteUser,
 };

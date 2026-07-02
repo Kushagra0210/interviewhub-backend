@@ -8,6 +8,7 @@ const protect = require("../middleware/authMiddleware");
 const {
     createUser,
     loginUser,
+    getMyProfile,
     getUsers,
     deleteUser,
     updateUser,
@@ -16,6 +17,8 @@ const {
 router.post("/", createUser);
 // create user login api
 router.post("/login", loginUser);
+// GET CURRENT USER PROFILE
+router.get("/profile", protect, getMyProfile);
 // GET USERS API
 router.get("/", protect, getUsers);
 // DELETE USER API
