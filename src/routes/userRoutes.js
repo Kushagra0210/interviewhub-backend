@@ -5,6 +5,7 @@ const router = express.Router();
 // Import controllers
 // import middleware
 const protect = require("../middleware/authMiddleware");
+const validateRegister = require("../middleware/validateMiddleware");
 const {
     createUser,
     loginUser,
@@ -14,7 +15,7 @@ const {
     updateUser,
 } = require("../controllers/userController");
 // CREATE USER API
-router.post("/", createUser);
+router.post("/", validateRegister, createUser);
 // create user login api
 router.post("/login", loginUser);
 // GET CURRENT USER PROFILE
