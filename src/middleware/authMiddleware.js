@@ -30,7 +30,6 @@ const protect = async (req, res, next) => {
         req.user = await user.findById(decoded.id)
             //exclude password
             //.select("-password") OST IMPORTANT SECURITY PRACTICE.Means:Do NOT return password Even hashed passwords should not be exposed
-
             .select("-password");
         // continue request
         next();
@@ -40,7 +39,6 @@ const protect = async (req, res, next) => {
             succcess: false,
             message: "invalid token "
         });
-
     }
 };
 // export middleware

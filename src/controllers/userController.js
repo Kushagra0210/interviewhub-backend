@@ -99,18 +99,25 @@ const getMyProfile = async (req, res) => {
 // GET USERS
 const getUsers = async (req, res) => {
     try {
-        // Fetch all users
-        const users = await User.find();
-        // Send response
-        res.json({
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
+        const users = await User.find()
+            .skip(skip)
+            .limit(limit)
+            .select("-password");
+        res.status(200).json({
             success: true,
-            users,
+            page,
+            limit,
+            count: users.length,
+            users
         });
-    } catch (error) {
-
+    }
+    catch (error) {
         res.status(500).json({
             success: false,
-            message: error.message,
+            message: error.message
         });
     }
 };
