@@ -4,18 +4,19 @@ const express = require("express");
 const router = express.Router();
 // Import controllers
 // import middleware
+const upload = require("../middleware/uploadMiddleware");
 const protect = require("../middleware/authMiddleware");
 const validateRegister = require("../middleware/validateMiddleware");
 const {
-    createUser,
     loginUser,
     getMyProfile,
     getUsers,
     deleteUser,
     updateUser,
+    registerUser,
 } = require("../controllers/userController");
 // CREATE USER API
-router.post("/", validateRegister, createUser);
+router.post("/register", upload.single("profilePhoto"), validateRegister, registerUser);
 // create user login api
 router.post("/login", loginUser);
 // GET CURRENT USER PROFILE

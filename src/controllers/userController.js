@@ -3,12 +3,13 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 // CREATE USER
-const createUser = async (req, res) => {
+const registerUser = async (req, res) => {
     try {
         // Extract data from request body
-        const { name, email, password } = req.body;
+        const { name, email, password, city } = req.body;
         // Create new user in MongoDB
         // check existing user
+        const profilePhoto = req.file ? req.file.filename : "";
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
@@ -22,6 +23,8 @@ const createUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
+            profilePhoto,
+            city,
         });
         // Send success response
         res.status(201).json({
@@ -63,7 +66,7 @@ const loginUser = async (req, res) => {
             {
                 id: user._id,
             },
-            "process.env.JWT_SECRET",
+            process.env.JWT_SECRET,
             {
                 expiresIn: "7d",
             }
@@ -84,13 +87,13 @@ const loginUser = async (req, res) => {
 const getMyProfile = async (req, res) => {
     try {
         // req.user comes from middleware
-        req.status(201).json({
+        res.status(201).json({
             success: true,
             user: req.user,
         });
     }
     catch (error) {
-        req.status(500).json({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -177,9 +180,10 @@ const updateUser = async (req, res) => {
 };
 // Export controllers
 module.exports = {
-    createUser,
+    registerUser,
     loginUser,
     getMyProfile,
     getUsers,
     deleteUser,
+    updateUser,
 };

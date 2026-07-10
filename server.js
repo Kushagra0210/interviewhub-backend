@@ -1,4 +1,5 @@
 // Import express framework
+const path = require("path");
 const express = require("express");
 // Import dotenv package
 const dotenv = require("dotenv");
@@ -15,6 +16,9 @@ app.use(express.json());
 // Import routes
 const userRoutes = require("./src/routes/userRoutes");
 // Register routes
+app.use("/analytics", analyticsRoutes);
+const analyticsRoutes = require("./src/routes/analyticsRoutes")
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/users", userRoutes);
 // Start server 
 app.listen(process.env.PORT, () => {
