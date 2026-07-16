@@ -6,6 +6,7 @@ const router = express.Router();
 // import middleware
 const upload = require("../middleware/uploadMiddleware");
 const protect = require("../middleware/authMiddleware");
+const admin = require("../middleware/validateMiddleware");
 const validateRegister = require("../middleware/validateMiddleware");
 const {
     loginUser,

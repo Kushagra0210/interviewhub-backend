@@ -2,6 +2,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
+const { profile } = require("console");
 // CREATE USER
 const registerUser = async (req, res) => {
     try {
@@ -9,7 +12,19 @@ const registerUser = async (req, res) => {
         const { name, email, password, city } = req.body;
         // Create new user in MongoDB
         // check existing user
-        const profilePhoto = req.file ? req.file.filename : "";
+        let profilePhoto = "";
+        let profilePhotoId = "";
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(
+                req.file.path,
+                {
+                    folder: "mern-users"
+                }
+            );
+            profilePhoto = result.secure_url;
+            profilePhotoId = result.public_id;
+            fs.unlinkSync(req.file.path);
+        }
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
@@ -24,6 +39,7 @@ const registerUser = async (req, res) => {
             email,
             password: hashedPassword,
             profilePhoto,
+            profilePhotoId,
             city,
         });
         // Send success response
@@ -140,7 +156,7 @@ const deleteUser = async (req, res) => {
         });
     }
 };
-// UPDATE USER CONTROLLER
+// UPDATE USER CONTROLLER 
 const updateUser = async (req, res) => {
     try {
         // Get ID from URL
