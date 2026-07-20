@@ -25,8 +25,8 @@ router.get("/profile", protect, getMyProfile);
 // GET USERS API
 router.get("/", protect, getUsers);
 // DELETE USER API
-router.delete("/:id", protect, deleteUser);
+router.delete("/:id", protect, admin, deleteUser);
 // UPDATE
-router.put("/:id", protect, updateUser);
+router.put("/:id", protect, admin, updateUser);
 // Export router
 module.exports = router;
