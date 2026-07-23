@@ -208,130 +208,75 @@ If Company Collection exists
 Only
 1 Document updates.
 ---
-
 ## Q16. Why should backend generate Slug?
-
 ### Answer
-
 Because client cannot be trusted.
-
 Client may send
-
 ```text
 GOOGLE
-
 Google123
-
 Google###
 ```
-
 Backend should always generate consistent slug.
-
 ---
-
 ## Q17. Why MVC?
-
 ### Answer
-
 MVC separates responsibilities.
-
 ```text
 Route
-
 ↓
-
 Controller
-
 ↓
-
 Model
-
 ↓
-
 Database
 ```
-
 Benefits
-
 * Cleaner code
 * Easier testing
 * Reusable Controllers
 * Better scalability
-
 ---
-
 ## Q18. Why Controllers?
-
 ### Answer
-
 Routes should only decide
-
 WHICH controller runs.
-
 Business logic belongs inside Controller.
-
 ---
-
 ## Q19. Why Models?
-
 ### Answer
-
 Models communicate with MongoDB.
-
 Controllers should never directly manipulate database collections.
-
 ---
-
 ## Q20. Explain REST APIs.
-
 ### Answer
-
 REST maps HTTP methods to operations.
-
 ```text
 GET
-
 ↓
-
 Read
 ```
-
 ```text
 POST
-
 ↓
-
 Create
 ```
-
 ```text
 PUT
-
 ↓
-
 Update
 ```
-
 ```text
 DELETE
-
 ↓
-
 Delete
 ```
-
 ---
-
 # Counter Questions (With Solutions)
-
 ---
-
 ## Q1
-
 Why can't MongoDB enforce structure?
-
 ### Solution
-
 MongoDB is schema-less by design.
 
 It accepts any document.

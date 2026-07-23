@@ -6,7 +6,7 @@ const router = express.Router();
 // import middleware
 const upload = require("../middleware/uploadMiddleware");
 const protect = require("../middleware/authMiddleware");
-const admin = require("../middleware/validateMiddleware");
+const admin = require("../middleware/adminMiddleware");
 const validateRegister = require("../middleware/validateMiddleware");
 const {
     loginUser,
@@ -21,7 +21,7 @@ router.post("/register", upload.single("profilePhoto"), validateRegister, regist
 // create user login api
 router.post("/login", loginUser);
 // GET CURRENT USER PROFILE
-router.get("/profile", protect, getMyProfile);
+router.get("/profile", protect, admin, getMyProfile);
 // GET USERS API
 router.get("/", protect, getUsers);
 // DELETE USER API
