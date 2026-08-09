@@ -6,32 +6,39 @@ const userSchema = new mongoose.Schema(
         name: {        // User name field
             type: String,
             required: true,
+            trim: true,
         },
         // User email field
         email: {
             type: String,
             required: true,
             unique: true,
+            lowercase: true,
+            trim: true,
         },
         password: {
             type: String,
             required: true,
+            select: false,
         },
         city: {
             type: String,
             required: true,
+            trim: true
         },
         profilePhoto: {
-            type: String
+            type: String,
+            default: "",
         },
         profilePhotoId: {
-            type: String
+            type: String,
+            default: "",
         },
         role: {
             type: String,
             enum: ["user", "admin"],
             default: "user",
-        }
+        },
     },
     // Schema options
     {

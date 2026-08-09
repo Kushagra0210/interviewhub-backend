@@ -16,7 +16,8 @@ const topicSchema = new mongoose.Schema(
         },
         description: {
             type: String,
-            default: ""
+            default: "",
+            trim: true,
         }
     },
     {
