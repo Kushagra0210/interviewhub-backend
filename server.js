@@ -16,6 +16,6 @@ async function main() {
     );
 }
 main().catch((error) => {
-  console.error("Startup failed:", error.name);
+  console.error("Startup failed:", error.name, error.code || "", error.codeName || "");
   process.exit(1);
 });
