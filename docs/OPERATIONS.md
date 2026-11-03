@@ -10,10 +10,10 @@
 | PORT | API port, default 4000 |
 | AI_SERVICE_URL | Private FastAPI URL |
 | API_URL | Next.js server-side API upstream; configured at build for standalone deployment |
-| LLM_PROVIDER | ollama or compatible |
+| LLM_PROVIDER | ollama, ollama-cloud, or compatible |
 | LLM_BASE_URL | Ollama base or hosted compatible API base (including /v1 where required) |
 | LLM_MODEL | Chat model; default qwen3:0.6b |
-| LLM_API_KEY | Hosted provider secret, never NEXT_PUBLIC |
+| LLM_API_KEY | Hosted provider secret, including Ollama Cloud key; never NEXT_PUBLIC |
 | EMBEDDING_MODEL | Embedding model, default nomic-embed-text |
 | EMBEDDING_DIMENSIONS | Expected vector length, default 768 |
 | QDRANT_URL / QDRANT_API_KEY | Private vector endpoint and optional credential |
@@ -34,6 +34,8 @@ Back up with mongodump to a protected location and verify restoration to a separ
 
 ## Deployment preparation
 The deployment target remains local-first. No paid services are provisioned. For a future public release, obtain provider/budget approval and verify then-current capabilities/pricing. Deploy web, API and AI containers on a private network; use managed MongoDB/Qdrant or durable backed-up volumes. Configure hosted inference for public uptime, TLS, exact origin, NODE_ENV=production and separate secrets. Do not use a small CPU instance for a large model.
+
+For Ollama Cloud, configure `LLM_PROVIDER=ollama-cloud`, `LLM_BASE_URL=https://ollama.com`, an available cloud model name and `LLM_API_KEY` as a private runtime secret. The cloud API does not support constrained output, so schema instructions are included in the prompt and Pydantic rejects invalid responses. This path is not verified until a live cloud smoke test passes. Cloud embeddings may need a separate provider; otherwise semantic search explicitly falls back to keyword search.
 
 Run additive migration dry-run and backup, apply only reviewed changes, seed original content, index, and smoke-test registration/login/logout, owner isolation, a real interview/report, restart persistence and semantic search. Check /ready and AI health separately. Configure upstream request timeout above 180 seconds for synchronous AI calls. Do not enable automatic deploy until checks pass on the target platform.
 

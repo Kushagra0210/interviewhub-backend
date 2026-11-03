@@ -9,10 +9,10 @@
 - Local benchmark on Windows/Node 24.19: 50 sequential keyword-search samples over 96 seeded questions, after five warmups, p50 22.32 ms and p95 30.86 ms. This uses local Supertest and disposable MongoDB, excludes inference/network, and is not a production capacity claim. Reproduce with `node scripts/benchmark.js`.
 
 ## Remaining work and limits
-- A full browser-to-real-Ollama interview was started but did not finish during this session; investigate and rerun `npx playwright test --config playwright.live.config.js`. Individual real model question and evaluation calls did pass.
+- A full browser-to-real-Ollama interview passed on a subsequent isolated run (`npx playwright test --config playwright.live.config.js`), including report persistence after reload. It took approximately three minutes on this machine's CPU.
 - Docker engine was unavailable; container build, Compose startup and networked Qdrant have not been verified. No public deployment or remote CI run is claimed.
 - AI responses currently use synchronous JSON, not token streaming. Provider cancellation is best effort and does not yet guarantee cancellation across service instances.
 - Existing auth tokens require sign-in again. Existing JSON and multipart registration clients must migrate to JSON registration and separate authenticated avatar upload. Legacy questions require the documented additive migration before public search/indexing.
-- The hosted OpenAI-compatible provider and Cloudinary upload require credentials and have not been tested. The small local model and evaluation rubric have not been validated for assessment quality.
+- Ollama Cloud and the hosted OpenAI-compatible provider require credentials and have not been tested. Ollama Cloud lacks schema-constrained output; the cloud adapter requests JSON in the prompt and validates it after generation. Cloudinary upload is also untested. The small local model and evaluation rubric have not been validated for assessment quality.
 - Admin list/history pagination, API contract completeness, observability, and stronger distributed rate limits require further work before production. The current full dependency audit reports four moderate development-only advisories; production audit is clean.
 - No production smoke tests, security penetration test, or evidence of CI passing remotely. Treat this as an incomplete production release, not a verified deployable service.

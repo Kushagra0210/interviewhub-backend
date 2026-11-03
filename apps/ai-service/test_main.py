@@ -70,6 +70,20 @@ def test_embedding_dimension_guard(monkeypatch):
         asyncio.run(main.embed(['moving range']))
 
 
+def test_ollama_cloud_uses_private_bearer_key(monkeypatch):
+    monkeypatch.setattr(main.settings, 'llm_api_key', 'example-test-only')
+    monkeypatch.setattr(main.settings, 'llm_provider', 'ollama-cloud')
+    def handler(request):
+        import json
+        assert request.headers['authorization'] == 'Bearer example-test-only'
+        payload = json.loads(request.content)
+        assert 'format' not in payload
+        assert 'schema' in payload['messages'][0]['content']
+        return httpx.Response(200, json={'message': {'content': '{"question":"Explain collisions", "topic":"DSA", "feedback":""}'}})
+    provider(monkeypatch, handler)
+    assert asyncio.run(main.turn(context()))['question'] == 'Explain collisions'
+
+
 def test_evaluation_uses_weighted_rubric(monkeypatch):
     import json
     report = dict(overallScore=99, technicalCorrectness=80, reasoning=60, communication=50, strengths=[], weaknesses=[], recommendations=[], questionEvaluations=[])
