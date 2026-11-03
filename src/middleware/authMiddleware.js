@@ -1,45 +1,18 @@
-const jwt = require("jsonwebtoken");
-//IMPORT USER MODEL
-const User = require("../models/User");
-//prptect middleware
-const protect = async (req, res, next) => {
-    try {
-        let token;
-        //check if authorisation header exists
-        if (
-            req.headers.authorization &&
-            req.headers.authorization.startsWith("Bearer")
-        ) {
-            // extract token
-            token = req.headers.authorization.split(" ")[1];
-        }
-        // if token is missing
-        if (!token) {
-            return res.status(401).json(
-                {
-                    succcess: false,
-                    message: "Not authorized, token missing",
-                }
-            );
-        }
-        // verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // find user drom db
-        //User.findById(decoded.id) fetches REAL user from database.Now backend knows: name, email, createdAt, everything.
-
-        req.user = await user.findById(decoded.id)
-            //exclude password
-            //.select("-password") OST IMPORTANT SECURITY PRACTICE.Means:Do NOT return password Even hashed passwords should not be exposed
-            .select("-password");
-        // continue request
-        next();
-    }
-    catch (error) {
-        res.status(401).json({
-            succcess: false,
-            message: "invalid token "
-        });
-    }
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Session = require('../models/Session');
+const { HttpError } = require('../utils/http');
+module.exports = async (req, _res, next) => {
+ const bearer = req.get('authorization')?.match(/^Bearer (\S+)$/)?.[1];
+ const token = bearer || req.cookies?.session;
+ if (!token) throw new HttpError(401, 'Sign in to continue');
+ let decoded;
+ try { decoded = jwt.verify(token, req.app.locals.config.JWT_SECRET, { algorithms: ['HS256'] }); }
+ catch { throw new HttpError(401, 'Session expired or invalid'); }
+ const session = await Session.findOne({ _id: decoded.jti, user: decoded.id, expiresAt: { $gt: new Date() } });
+ if (!session) throw new HttpError(401, 'Session expired or revoked');
+ req.user = await User.findById(decoded.id);
+ if (!req.user) throw new HttpError(401, 'Account no longer exists');
+ if (!bearer && !['GET','HEAD','OPTIONS'].includes(req.method) && req.get('x-csrf-token') !== session.csrf) throw new HttpError(403, 'Invalid CSRF token');
+ req.session = session; next();
 };
-// export middleware
-module.exports = protect;

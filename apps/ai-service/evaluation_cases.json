@@ -1,0 +1,5 @@
+[
+  {"label":"incorrect","question":"Explain how hash table collisions are handled.","answer":"Two keys can never have the same hash. Every lookup is guaranteed constant time.","expected":"Identify the false claim and lack of collision strategy; low correctness."},
+  {"label":"partial","question":"Explain how hash table collisions are handled.","answer":"You can put colliding entries in a list in the same bucket.","expected":"Credit chaining, identify missing key comparison, complexity and load factor."},
+  {"label":"strong","question":"Explain how hash table collisions are handled.","answer":"Different keys may map to the same bucket. Chaining keeps entries in a bucket and compares full keys; open addressing probes other slots. With a good hash and controlled load, expected operations are constant time, but worst-case lookup can be linear. Resize as load grows and test duplicate keys and adversarial collisions.","expected":"Credit alternatives, assumptions, complexity and testing; higher correctness than the incorrect response."}
+]
