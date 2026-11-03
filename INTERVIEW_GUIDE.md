@@ -24,7 +24,7 @@
 10. **Evaluate output?** Validate JSON against schemas, apply a documented weighted rubric, retain model/prompt version, and test varied answer quality separately.
 11. **Reduce hallucinations?** Constrain scope and output, use explicit rubrics, accept alternatives, and disclose uncertainty. These controls do not eliminate hallucinations.
 12. **Provider failures?** Bounded retries/timeouts, durable operation leases, visible errors and manual recovery. Never generate fake feedback.
-13. **Deployment?** Docker configuration and CI are supplied. State actual verification from STATUS; do not imply a public deployment exists.
+13. **Deployment?** The frontend runs on Vercel, the API and AI service run on Render, and operational data is stored in MongoDB Atlas. Groq provides deployed inference; Ollama is supported locally. See STATUS for verification limits.
 14. **Scale?** Horizontally scale stateless HTTP handling, distribute rate limits/cancellation, move inference to dedicated workers, and measure bottlenecks first.
 15. **10,000 concurrent users?** Add admission control, durable queues, token budgets, load tests, connection-pool sizing, index analysis and inference capacity planning. The current single-process limits are not designed for that load.
 16. **Trade-offs?** Simpler synchronous JSON generation versus token streaming; Mongo-backed indexing versus adding Redis; model portability versus provider-specific features.
@@ -33,8 +33,8 @@
 
 ## Resume wording
 Use only claims confirmed in docs/STATUS.md. Suitable feature-focused bullets:
-- Built a full-stack interview-practice application using Next.js, Express, MongoDB and FastAPI, with revocable authentication and persistent AI interview reports.
-- Implemented version-checked, idempotent answer submission and recoverable provider operations, validated through database integration tests.
-- Integrated Ollama embeddings and Qdrant retrieval with publication filtering, versioned collections and explicit keyword fallback.
+- Built and deployed an interview-practice platform using Next.js, Express, MongoDB and FastAPI, supporting six engineering tracks and seven interview formats.
+- Implemented revocable authentication and idempotent answer submission; validated access control and retry behavior with eight backend integration tests.
+- Added a 96-question practice library and a local Ollama/Qdrant semantic-search pipeline with keyword fallback; the deployed application currently uses keyword search.
 
 Do not claim user counts, model accuracy, speedups, scale or public deployment without separate measured evidence.

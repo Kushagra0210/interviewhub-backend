@@ -2,7 +2,14 @@
 
 An interview-preparation application built on the original Express/Mongoose project, with Next.js, a FastAPI inference service, Ollama, and Qdrant. Includes original practice questions, revocable authentication, persistent interview sessions, structured feedback, bookmarks, history, progress charts and admin content management.
 
-**Verification and limitations:** see [STATUS](docs/STATUS.md). This is local-first; no public deployment URL is claimed.
+**Live demo:** [interview-hub-kushagra.vercel.app](https://interview-hub-kushagra.vercel.app). The deployed AI service uses Groq; local development supports Ollama. See [STATUS](docs/STATUS.md) for verification and limitations.
+
+## Features and measurements
+
+- Six engineering tracks and seven interview formats, with saved sessions and AI feedback.
+- 96 original seeded practice questions across 16 topics, with keyword search and filters. The local semantic-search pipeline uses Ollama embeddings and Qdrant; the deployed environment currently falls back to keyword search when vector services are unavailable.
+- Bcrypt password hashing, revocable sessions, HTTP-only cookies, CSRF checks, and server-side authorization. Idempotency keys and version checks prevent duplicate answers.
+- Local keyword-search benchmark on 4 November 2026: **14.03 ms median** and **23.43 ms p95**, measured over 50 sequential samples after five warmups, against 96 seeded questions. This used Supertest and disposable MongoDB on Windows with Node 24.19, excludes remote network and AI inference, and is not a speedup or production-capacity claim. Reproduce with `node scripts/benchmark.js`.
 
 ## Start locally
 
