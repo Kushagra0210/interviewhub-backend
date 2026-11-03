@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
         },
         city: {
             type: String,
-            required: true,
+            default: "",
             trim: true
         },
         profilePhoto: {
@@ -34,6 +34,8 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "",
         },
+        preferredRole: { type: String, default: 'Software Development Engineer' },
+        bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
         role: {
             type: String,
             enum: ["user", "admin"],

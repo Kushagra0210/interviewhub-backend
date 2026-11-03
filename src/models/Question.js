@@ -32,13 +32,20 @@ const questionSchema = new mongoose.Schema(
                 ref: "Topic"
             }
         ],
+        roles: [String],
+        expectedConcepts: [String],
+        rubric: { type: String, default: '' },
+        status: { type: String, enum: ['draft', 'published', 'archived'], default: 'published' },
+        attribution: { type: String, default: 'Original practice question' },
+        indexRevision: { type: Number, default: 1 },
+        indexedRevision: { type: Number, default: 0 },
         platform: {
             type: String,
-            required: true
+            default: 'Original'
         },
         platformLink: {
             type: String,
-            required: true
+            default: ''
         }
     },
     {
